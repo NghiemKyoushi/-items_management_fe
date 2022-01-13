@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +35,27 @@
   to {
     transform: rotate(360deg);
   }
+} */
+.inputSearch {
+  border-radius: 40px;
+  height: 40px;
+  width: 642px;
+  margin-top: 4px;
+  margin-left: 30px;
+  border:solid 1px #ccc;
+}
+/* input :placeholder-shown{
+  padding-left: 50px;
+} */
+input[type="text"]::placeholder {
+  padding-left: 20px;
+}
+input:focus{
+  padding-left: 20px;
+}
+
+
+.makeStyles-root-1{
+  display: flex;
+  flex-direction: column;
 }
