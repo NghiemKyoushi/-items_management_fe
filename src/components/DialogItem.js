@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -28,43 +28,24 @@ const useStyle = makeStyles(() => ({
   },
 }));
 
-export default function NewItem() {
-  const [open, setOpen] = React.useState(false);
-  const [file, setFile] = React.useState(null);
+export default function DialogItem(props) {
+  //   const [open, setOpen] = React.useState(false);
+  const [file1, setFile1] = useState(null);
 
   const classes = useStyle();
 
   const onFileChange = (event) => {
-    // Update the state
-    // console.log(event.target.files[0]);
-    setFile(URL.createObjectURL(event.target.files[0]));
-    console.log("file", setFile);
+    setFile1(URL.createObjectURL(event.target.files[0]));
+    console.log("file", setFile1);
   };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <div>
-      <Button
-        size="medium"
-        variant="contained"
-        sx={{
-          color: "#ffff",
-          background: "#1fc3ff",
-          marginLeft: "62%",
-          marginBottom: 3,
-        }}
-        onClick={handleClickOpen}
+      <Dialog
+        maxWidth="lg"
+        fullWidth={true}
+        open={props.open}
+        onClose={props.handleClose}
       >
-        Add new item
-      </Button>
-      <Dialog maxWidth="lg" fullWidth={true} open={open} onClose={handleClose}>
         <DialogTitle sx={{ color: "#1fc3ff" }}>Add new item</DialogTitle>
         <DialogContent>
           <div className="content">
@@ -94,7 +75,6 @@ export default function NewItem() {
                   <div>
                     <label className="labelSize">choose application</label>
                     <br />
-                    {/* <TextField size="small" variant="outlined" /> */}
                     <SelectApplication />
                   </div>
                   <div>
@@ -130,8 +110,8 @@ export default function NewItem() {
                       width="296"
                       height="275"
                       src={
-                        file
-                          ? file
+                        file1
+                          ? file1
                           : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ_fAACs6UF4F8AHUPEpLpzWdt1hmme9u6zQoRk7iLabIRkC6VnBLGltFfiXJo4rw16Ps&usqp=CAU"
                       }
                       alt=""
@@ -155,11 +135,11 @@ export default function NewItem() {
         <DialogActions
           sx={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Button onClick={handleClose} size="small" variant="outlined">
+          <Button onClick={props.handleClose} size="small" variant="outlined">
             cancel
           </Button>
           <Button
-            onClick={handleClose}
+            onClick={props.handleClose}
             size="small"
             variant="contained"
             sx={{ color: "#ffff", background: "#1fc3ff" }}

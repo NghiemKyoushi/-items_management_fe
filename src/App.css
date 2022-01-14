@@ -59,3 +59,75 @@ input:focus{
   display: flex;
   flex-direction: column;
 }
+.labelSize{
+  font-size: 13px;
+}
+
+.usage{
+  border: 2px solid rgb(173, 165, 165);
+  width: 60px;
+  height: 20px;
+  padding-top: 2px;
+  border-radius: 20px;
+  margin-top: 1px;
+}
+.title{
+  height: 30px;
+}
+.formSignUp{
+  max-width: 747px; 
+   max-height: 725px;
+  background: #1fc3ff ;
+  margin-top: -20px;
+  z-index: 1;
+}
+.imgContainer{
+    /* height: 100vh; */
+}
+
+.imgHouse{
+  width:90%;
+  /* height:100px; */
+  /* margin-top: -15px; */
+}
+.welcome{
+  color: #1fc3ff;
+  text-align: center;
+  letter-spacing: 5px;
+  font-size: 40px;
+  font-weight: bold;
+}
+.product{
+  color: #ef6920;
+  text-align: center;
+  margin-top: -20px;
+}
+hr{
+    width: 18%;
+    text-align: center;
+    background: #5c91d9;
+    height: 4px;
+    border-radius: 50px;
+}
+.signUp{
+    color: white;
+    font-size: 70px;
+    font-weight: bold;
+    padding-top: 26px;
+    padding-left: 135px;
+    letter-spacing: 5px;
+    margin-bottom: -67px;
+}
+.here{
+  color: white;
+  padding-left: 201px;
+  letter-spacing: 5px;
+  margin-top: -5px;
+  font-size: 70px;
+  font-weight: bold;
+  margin-left: 125px;
+}
+.imgCat{
+  margin-top: -105px;
+  margin-left: 463px;
+}

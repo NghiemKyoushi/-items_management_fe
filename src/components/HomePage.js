@@ -113,10 +113,10 @@ export default function HomePage() {
       >
         <Toolbar>
           <Typography
-            variant="h6"
+            variant="h5"
             noWrap
             component="div"
-            style={{ color: "#1fc3ff" }}
+            style={{ color: "#1fc3ff", fontWeight: "bold" }}
           >
             Welcome to my home
           </Typography>
@@ -125,7 +125,7 @@ export default function HomePage() {
           <IconButton style={{marginLeft: -56}}> <SearchIcon /></IconButton>
           </div>
           <div style={{marginLeft:390, marginTop: 16, display:"flex" , flexDirection: "row", justifyContent: "space-between"}}>
-          <Avatar alt="Remy Sharp"  src={`${Avatar_img}?w=100&h=120&fit=crop&auto=format`}/>
+          <Avatar alt="Remy Sharp"  src={Avatar_img} imgProps={{height: 10, width:10}} />
           <p>Vịt bối dối</p>
           </div>
         </Toolbar>
@@ -139,7 +139,6 @@ export default function HomePage() {
           },
         }}
         variant="permanent"
-        // open={open}
       >
         <DrawerHeader>
           <IconButton size="large" color="inherit" aria-label="open drawer">
@@ -175,11 +174,11 @@ export default function HomePage() {
         }}
       >
       <NewItem/>
-        <Grid container spacing={26}>
-          <Grid item xs={8}>
+        <Grid container spacing={1}>
+          <Grid item xs={9}>
             <ItemCard />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={2}>
             <DatePresent />
           </Grid>
         </Grid>

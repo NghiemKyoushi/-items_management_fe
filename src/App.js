@@ -1,11 +1,15 @@
-import logo from './logo.svg';
-import './App.css';
-import HomePage from './components/HomePage';
+import "./App.css";
+import HomePage from "./components/HomePage";
+import SignUp from "./components/SignUp";
+import { BrowserRouter as Router,Routes, Switch, Route, Link } from "react-router-dom";
+
 function App() {
   return (
-    <>
-      <HomePage/>
-    </>
+    <Routes>
+      <Route path="/" element={<HomePage />}/>
+      <Route path="/signUp" element={<SignUp/>}/>
+      
+    </Routes>
   );
 }
 
