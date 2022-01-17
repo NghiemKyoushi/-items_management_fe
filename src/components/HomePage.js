@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -11,7 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import Avatar from '@mui/material/Avatar';
+import Avatar from "@mui/material/Avatar";
 
 import Grid from "@mui/material/Grid";
 import Setting from "../image/settings.png";
@@ -19,7 +20,7 @@ import Home from "../image/home.png";
 import Calendar from "../image/calendar.png";
 import Avatar_img from "../image/38c6e1a50d33f6c0c1e09eced4229b94.png";
 import SearchIcon from "@mui/icons-material/Search";
-
+import LogoutIcon from "@mui/icons-material/Logout";
 import ItemCard from "./ItemCard";
 import DatePresent from "./DatePresent";
 import NewItem from "./NewItem";
@@ -89,19 +90,23 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-
 export default function HomePage() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-
-  // const handleDrawerOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const handleDrawerClose = () => {
-  //   setOpen(false);
-  // };
-
+  const [checkUser, setCheckUser] = React.useState(false);
+  const [nameUser, setNameUser] = React.useState("");
+  React.useEffect (() => {
+    if (localStorage.getItem("username") !== null) {
+      setCheckUser(true);
+      setNameUser(localStorage.getItem("username"));
+    }
+  }, []);
+  const logOut = () => {
+    console.log("logout");
+    localStorage.removeItem("username");
+    localStorage.removeItem("uid");
+    setCheckUser(false);
+  };
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -120,14 +125,75 @@ export default function HomePage() {
           >
             Welcome to my home
           </Typography>
-          <div >
-          <input type="text" className="inputSearch" placeholder="Search..."/>
-          <IconButton style={{marginLeft: -56}}> <SearchIcon /></IconButton>
+          <div>
+            <input
+              type="text"
+              className="inputSearch"
+              placeholder="Search..."
+            />
+            <IconButton style={{ marginLeft: -56 }}>
+              <SearchIcon />
+            </IconButton>
           </div>
-          <div style={{marginLeft:390, marginTop: 16, display:"flex" , flexDirection: "row", justifyContent: "space-between"}}>
-          <Avatar alt="Remy Sharp"  src={Avatar_img} imgProps={{height: 10, width:10}} />
-          <p>Vịt bối dối</p>
-          </div>
+          {checkUser ? (
+            <div
+              style={{
+                marginLeft: 300,
+                marginTop: 16,
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Avatar
+                alt="Remy Sharp"
+                src={Avatar_img}
+                imgProps={{ height: 10, width: 10 }}
+              />
+              <p style={{ marginTop: 8 }}>{nameUser}</p>
+              <IconButton
+                sx={{ color: "#1fc3ff", marginLeft: 2 }}
+                onClick={logOut}
+              >
+                <LogoutIcon />
+              </IconButton>
+            </div>
+          ) : (
+            <div className="buttonOnNav">
+            <Link to ="/login" style={{textDecoration: "none"}}><Button
+                sx={{
+                  letterSpacing: 4,
+                  height: 38,
+                  border: "1px solid white",
+                  backgroundColor: "#1fc3ff",
+                  borderRadius: "30px",
+                  color: "white",
+                  fontWeight: "bold",
+                }}
+                variant="contained"
+              >
+                Login
+              </Button></Link>
+              
+              <Link to ="/signUp" style={{textDecoration: "none"}}>
+              <Button
+                sx={{
+                  letterSpacing: 4,
+                  height: 38,
+                  border: "1px solid white",
+                  backgroundColor: "#1fc3ff",
+                  borderRadius: "30px",
+                  color: "white",
+                  fontWeight: "bold",
+                }}
+                variant="contained"
+              >
+                Sign Up
+              </Button>
+              </Link>
+              
+            </div>
+          )}
         </Toolbar>
       </AppBar>
       <Drawer
@@ -142,7 +208,7 @@ export default function HomePage() {
       >
         <DrawerHeader>
           <IconButton size="large" color="inherit" aria-label="open drawer">
-            <MenuIcon sx={{ fontSize: 40 }}/>
+            <MenuIcon sx={{ fontSize: 40 }} />
           </IconButton>
         </DrawerHeader>
         <List>
@@ -173,10 +239,11 @@ export default function HomePage() {
           background: "white",
         }}
       >
-      <NewItem/>
+      {checkUser ? <NewItem /> : ""}
+        
         <Grid container spacing={1}>
           <Grid item xs={9}>
-            <ItemCard />
+            {checkUser ? <ItemCard /> : "Log in to access your home"}
           </Grid>
           <Grid item xs={2}>
             <DatePresent />

@@ -18,39 +18,26 @@ const MenuProps = {
 };
 
 const names = [
-  'Oliver Hansen',
-//   'Van Henry',
-//   'April Tucker',
-//   'Ralph Hubbard',
-//   'Omar Alexander',
-//   'Carlos Abbott',
-//   'Miriam Wagner',
-//   'Bradley Wilkerson',
-//   'Virginia Andrews',
-//   'Kelly Snyder',
+  'decorate'
 ];
 
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
+// function getStyles(name, personName, theme) {
+//   return {
+//     fontWeight:
+//       personName.(name) === -1
+//         ? theme.typography.fontWeightRegular
+//         : theme.typography.fontWeightMedium,
+//   };
+// }
 
-export default function SelectApplication() {
+export default function SelectApplication({props}) {
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
+  // const [personName, setPersonName] = React.useState();
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
+  // const handleChange = (event) => {
+  //   // console.log(personName);
+  //   props.getChange(event.target.value);
+  // };
 
   return (
     <div>
@@ -59,20 +46,17 @@ export default function SelectApplication() {
         <Select
           labelId="demo-multiple-name-label"
           id="demo-multiple-name"
-          value={personName}
-          onChange={handleChange}
+          value="decorate"
+          onChange={props.getChange}
           input={<OutlinedInput size='small'/>}
           MenuProps={MenuProps}
         >
-          {names.map((name) => (
             <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
+              value="decorate"
+              // style={getStyles("decorate", personName, theme)}
             >
-              {name}
+              decorate
             </MenuItem>
-          ))}
         </Select>
       </FormControl>
     </div>

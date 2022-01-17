@@ -1,41 +1,4 @@
-/* .App {
-  text-align: center;
-}
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */
 .inputSearch {
   border-radius: 40px;
   height: 40px;
@@ -44,9 +7,7 @@
   margin-left: 30px;
   border:solid 1px #ccc;
 }
-/* input :placeholder-shown{
-  padding-left: 50px;
-} */
+
 input[type="text"]::placeholder {
   padding-left: 20px;
 }
@@ -75,10 +36,10 @@ input:focus{
   height: 30px;
 }
 .formSignUp{
-  max-width: 747px; 
+  max-width: 100%; 
    max-height: 725px;
   background: #1fc3ff ;
-  margin-top: -20px;
+  /* margin-top: -20px; */
   z-index: 1;
 }
 .imgContainer{
@@ -87,8 +48,7 @@ input:focus{
 
 .imgHouse{
   width:90%;
-  /* height:100px; */
-  /* margin-top: -15px; */
+
 }
 .welcome{
   color: #1fc3ff;
@@ -102,7 +62,7 @@ input:focus{
   text-align: center;
   margin-top: -20px;
 }
-hr{
+.underline{
     width: 18%;
     text-align: center;
     background: #5c91d9;
@@ -130,4 +90,75 @@ hr{
 .imgCat{
   margin-top: -105px;
   margin-left: 463px;
+}
+.inputRounded .MuiOutlinedInput-root{
+  border-radius: 50px;
+  background-color: white;
+  width: 450px;
+}
+.formSignUp1{
+  margin-left: 130px;
+  margin-top: -40px;
+}
+
+.normal{
+  width: 70px;
+  height: 7px;
+  background-color: white;
+  border-radius: 30px;
+  margin-left: 3px;
+}
+.weak{
+  width: 70px;
+  height: 7px;
+  background-color: rgb(233, 173, 61);
+  border-radius: 30px;
+  margin-left: 3px;
+}
+.medium{
+  width: 70px;
+  height: 7px;
+  background-color: rgb(62, 150, 12);
+  border-radius: 30px;
+  margin-left: 3px;
+}
+.strong{
+  width: 70px;
+  height: 7px;
+  background-color: rgb(104, 245, 23);
+  border-radius: 30px;
+  margin-left: 3px;
+}
+.checkpass{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.container{
+  margin-right: 175px;
+  display: flex;
+  justify-content: space-between;
+  white-space: 5px;
+  flex-wrap: wrap;
+  margin-top: 25px;
+}
+.standard_Password{
+  letter-spacing: 3px;
+  color: white;
+}
+
+.containButton{
+  margin-left: 22px;
+  margin-top: 5px;
+}
+.space{
+  height: 57px;
+}
+.space2{
+  height: 182px;
+
+}
+
+.buttonOnNav{
+  margin-left: 300px;
 }

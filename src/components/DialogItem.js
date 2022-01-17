@@ -131,7 +131,7 @@ export default function DialogItem(props) {
             </Grid>
           </div>
         </DialogContent>
-        <Divider />
+        <Divider/>
         <DialogActions
           sx={{ display: "flex", justifyContent: "space-between" }}
         >

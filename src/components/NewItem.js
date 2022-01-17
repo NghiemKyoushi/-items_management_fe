@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import axios, { Axios } from "axios";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -13,6 +14,10 @@ import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Divider from "@mui/material/Divider";
 import SelectApplication from "./SelectApplication";
 
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 const useStyle = makeStyles(() => ({
   root: {
     "& .MuiFormControl-root": {
@@ -28,17 +33,88 @@ const useStyle = makeStyles(() => ({
   },
 }));
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 550,
+    },
+  },
+};
 export default function NewItem() {
   const [open, setOpen] = React.useState(false);
   const [file, setFile] = React.useState(null);
 
+  const [name, setName] = useState("");
+  const [shortName, setShortName] = useState("");
+  const [position, setPosition] = useState("");
+  const [expired_date, setExpired_date] = useState(null);
+  const [category, setCategory] = useState("decorate");
+  const [picture_url, setPicture_url] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+
+  const onChangeName = (e) => {
+    setName(e.target.value);
+  };
+  const onChangeShortName = (e) => {
+    setShortName(e.target.value);
+  };
+  const onChangePosition = (e) => {
+    setPosition(e.target.value);
+  };
+  const onChangeExpired_date = (e) => {
+    setExpired_date(e.target.value);
+  };
+  const onChangeCategory = (e) => {
+    setCategory(e.target.value);
+  };
+  const onChangeDescription = (e) => {
+    setDescription(e.target.value);
+  };
+  const onChangePrice = (e) => {
+    setPrice(e.target.value);
+  };
+
+  const saveItem = async () => {
+    try{
+      const formData = new FormData();
+      formData.append("file",picture_url[0]);
+      formData.append("upload_preset","ucq0mifj");
+     const data = await axios.post("https://api.cloudinary.com/v1_1/hanoi-university/image/upload", formData)
+      console.log(data.data);
+      
+      const body = {
+        name: name,
+        shortName: shortName,
+        position: position,
+        expired_date: expired_date,
+        category: category,
+        picture_url: data.data.secure_url,
+        description: description,
+        price: price,
+      };
+      const saveItem = await axios.post("http://localhost:3030/item/addItem", body);
+  
+      console.log("body", body);
+  
+      console.log(saveItem);
+    }catch(err){
+
+    }
+     
+
+    
+  };
   const classes = useStyle();
 
   const onFileChange = (event) => {
     // Update the state
-    // console.log(event.target.files[0]);
-    setFile(URL.createObjectURL(event.target.files[0]));
-    console.log("file", setFile);
+    console.log("path", window.URL.createObjectURL(event.target.files[0]));
+    setFile(window.URL.createObjectURL(event.target.files[0]));
+    setPicture_url(event.target.files);
   };
 
   const handleClickOpen = () => {
@@ -74,33 +150,78 @@ export default function NewItem() {
                   <div>
                     <label className="labelSize">name of item</label>
                     <br />
-                    <TextField size="small" variant="outlined" />
+                    <TextField
+                      onChange={onChangeName}
+                      size="small"
+                      variant="outlined"
+                    />
                   </div>
                   <div>
                     <label className="labelSize">stand for item</label>
                     <br />
-                    <TextField size="small" variant="outlined" />
+                    <TextField
+                      onChange={onChangeShortName}
+                      size="small"
+                      variant="outlined"
+                    />
                   </div>
                   <div>
                     <label className="labelSize">position</label>
                     <br />
-                    <TextField size="small" variant="outlined" />
+                    <TextField
+                      onChange={onChangePosition}
+                      size="small"
+                      variant="outlined"
+                    />
                   </div>
                   <div>
                     <label className="labelSize">expired date</label>
                     <br />
-                    <TextField size="small" type="date" variant="outlined" />
+                    <TextField
+                      onChange={onChangeExpired_date}
+                      size="small"
+                      type="date"
+                      variant="outlined"
+                    />
                   </div>
                   <div>
                     <label className="labelSize">choose application</label>
                     <br />
-                    {/* <TextField size="small" variant="outlined" /> */}
-                    <SelectApplication />
+                    <Select
+                      sx={{ m: 1, width: 565 }}
+                      labelId="demo-multiple-name-label"
+                      id="demo-multiple-name"
+                  defaultValue={"decorate"}
+                      input={<OutlinedInput size="small" />}
+                      MenuProps={MenuProps}
+                      onChange={onChangeCategory}
+                    >
+                      <MenuItem
+                        value="decorate"
+                      >
+                        decorate
+                      </MenuItem>
+                      <MenuItem
+                        value="using"
+                      >
+                        using
+                      </MenuItem>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="labelSize">price</label>
+                    <br />
+                    <TextField
+                      onChange={onChangePrice}
+                      size="small"
+                      variant="outlined"
+                    />
                   </div>
                   <div>
                     <label className="labelSize">description</label>
                     <br />
                     <TextareaAutosize
+                      onChange={onChangeDescription}
                       aria-label="empty textarea"
                       style={{ width: 1150, height: 100, borderRadius: "10px" }}
                     />
@@ -159,7 +280,7 @@ export default function NewItem() {
             cancel
           </Button>
           <Button
-            onClick={handleClose}
+            onClick={saveItem}
             size="small"
             variant="contained"
             sx={{ color: "#ffff", background: "#1fc3ff" }}

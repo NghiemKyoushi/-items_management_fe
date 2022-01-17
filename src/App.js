@@ -1,15 +1,30 @@
 import "./App.css";
 import HomePage from "./components/HomePage";
 import SignUp from "./components/SignUp";
-import { BrowserRouter as Router,Routes, Switch, Route, Link } from "react-router-dom";
-
+import {
+  BrowserRouter as Router,
+  Routes,
+  Switch,
+  Route,
+  Link,
+} from "react-router-dom";
+import Login from "./components/Login";
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />}/>
-      <Route path="/signUp" element={<SignUp/>}/>
-      
-    </Routes>
+    // <Routes>
+    <Switch>
+      <Route path="/" exact>
+        <HomePage />
+      </Route>
+      <Route path="/signUp" exact>
+        <SignUp />
+      </Route>
+      <Route path="/login" exact>
+        <Login />
+      </Route>
+    </Switch>
+
+    // </Routes>
   );
 }
 
