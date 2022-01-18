@@ -5,14 +5,15 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-// import { FormControl, makeStyles } from '@mui/material';
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Divider from "@mui/material/Divider";
-import SelectApplication from "./SelectApplication";
-
+import OutlinedInput from "@mui/material/OutlinedInput";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import axios from "axios";
 const useStyle = makeStyles(() => ({
   root: {
     "& .MuiFormControl-root": {
@@ -28,16 +29,80 @@ const useStyle = makeStyles(() => ({
   },
 }));
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 550,
+    },
+  },
+};
 export default function DialogItem(props) {
-  //   const [open, setOpen] = React.useState(false);
-  const [file1, setFile1] = useState(null);
 
+  const [name, setName] = useState(props.item.name);
+  const [shortName, setShortName] = useState(props.item.shortName);
+  const [position, setPosition] = useState(props.item.position);
+  const [expired_date, setExpired_date] = useState(props.item.expired_date);
+  const [category, setCategory] = useState(props.item.category);
+  const [description, setDescription] = useState(props.item.description);
+  const [price, setPrice] = useState(props.item.price);
   const classes = useStyle();
 
-  const onFileChange = (event) => {
-    setFile1(URL.createObjectURL(event.target.files[0]));
-    console.log("file", setFile1);
+  const onChangeName = (e) => {
+    setName(e.target.value);
   };
+  const onChangeShortName = (e) => {
+    setShortName(e.target.value);
+  };
+  const onChangePosition = (e) => {
+    setPosition(e.target.value);
+  };
+  const onChangeExpired_date = (e) => {
+    setExpired_date(e.target.value);
+  };
+  const onChangeCategory = (e) => {
+    setCategory(e.target.value);
+  };
+  const onChangeDescription = (e) => {
+    setDescription(e.target.value);
+  };
+  const onChangePrice = (e) => {
+    setPrice(e.target.value);
+  };
+
+  const editItem = async () => {
+    console.log("edit");
+    const body = {
+      userID: localStorage.getItem("uid"),
+      name: name,
+      shortName: shortName,
+      position: position,
+      expired_date: expired_date,
+      category: category,
+      description: description,
+      price: price,
+    };
+    console.log(body);
+    const editItem = await axios.post("http://localhost:3030/item/editItem", body);
+    console.log(editItem.data.message);
+  };
+
+  const deleteItem = async () => {
+    const body = {
+      userID: localStorage.getItem("uid"),
+
+      itemId: props.item._id,
+    };
+    const delete_Item = await axios.post(
+      "http://localhost:3030/item/deleteItem",
+      body
+    );
+    props.handleClose();
+    props.getAllItem(localStorage.getItem("uid"));
+  };
+
   return (
     <div>
       <Dialog
@@ -46,7 +111,7 @@ export default function DialogItem(props) {
         open={props.open}
         onClose={props.handleClose}
       >
-        <DialogTitle sx={{ color: "#1fc3ff" }}>Add new item</DialogTitle>
+        <DialogTitle sx={{ color: "#1fc3ff" }}>Edit item</DialogTitle>
         <DialogContent>
           <div className="content">
             <Grid container>
@@ -55,32 +120,78 @@ export default function DialogItem(props) {
                   <div>
                     <label className="labelSize">name of item</label>
                     <br />
-                    <TextField size="small" variant="outlined" />
+                    <TextField
+                      size="small"
+                      variant="outlined"
+                      value={props.item.name}
+                      onChange={onChangeName}
+                      type="text"
+
+                    />
                   </div>
                   <div>
                     <label className="labelSize">stand for item</label>
                     <br />
-                    <TextField size="small" variant="outlined" />
+                    <TextField
+                      size="small"
+                      variant="outlined"
+                      value={props.item.shortName}
+                      onChange={onChangeShortName}
+                    />
                   </div>
                   <div>
                     <label className="labelSize">position</label>
                     <br />
-                    <TextField size="small" variant="outlined" />
+                    <TextField
+                      size="small"
+                      value={props.item.position}
+                      variant="outlined"
+                      onChange={onChangePosition}
+                    />
                   </div>
                   <div>
                     <label className="labelSize">expired date</label>
                     <br />
-                    <TextField size="small" type="date" variant="outlined" />
+                    <TextField
+                      size="small"
+                      value={props.item.expired_date}
+                      type="date"
+                      variant="outlined"
+                      onChange={onChangeExpired_date}
+                    />
                   </div>
                   <div>
                     <label className="labelSize">choose application</label>
                     <br />
-                    <SelectApplication />
+                    <Select
+                      sx={{ m: 1, width: 565 }}
+                      labelId="demo-multiple-name-label"
+                      id="demo-multiple-name"
+                      defaultValue={props.item.category}
+                      input={<OutlinedInput size="small" />}
+                      MenuProps={MenuProps}
+                      onChange={onChangeCategory}
+                    >
+                      <MenuItem value="decorate">decorate</MenuItem>
+                      <MenuItem value="using">using</MenuItem>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="labelSize">price</label>
+                    <br />
+                    <TextField
+                      onChange={onChangePrice}
+                      size="small"
+                      variant="outlined"
+                      value={props.item.price}
+                    />
                   </div>
                   <div>
                     <label className="labelSize">description</label>
                     <br />
                     <TextareaAutosize
+                      onChange={onChangeDescription}
+                      value={props.item.description}
                       aria-label="empty textarea"
                       style={{ width: 1150, height: 100, borderRadius: "10px" }}
                     />
@@ -98,32 +209,17 @@ export default function DialogItem(props) {
                   }}
                 >
                   <label htmlFor="btn-upload">
-                    <input
-                      id="btn-upload"
-                      name="btn-upload"
-                      style={{ display: "none" }}
-                      type="file"
-                      accept="image/*"
-                      onChange={onFileChange}
-                    />
                     <img
                       width="296"
                       height="275"
                       src={
-                        file1
-                          ? file1
+                        props.item.picture_url
+                          ? props.item.picture_url
                           : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ_fAACs6UF4F8AHUPEpLpzWdt1hmme9u6zQoRk7iLabIRkC6VnBLGltFfiXJo4rw16Ps&usqp=CAU"
                       }
-                      alt=""
+                      alt={props.item.name}
                     />
                     <br />
-                    <Button
-                      className="btn-choose"
-                      variant="outlined"
-                      component="span"
-                    >
-                      Choose Image
-                    </Button>
                   </label>
                 </div>
                 <div></div>
@@ -131,20 +227,25 @@ export default function DialogItem(props) {
             </Grid>
           </div>
         </DialogContent>
-        <Divider/>
+        <Divider />
         <DialogActions
           sx={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Button onClick={props.handleClose} size="small" variant="outlined">
-            cancel
+          <Button
+            size="small"
+            color="error"
+            variant="contained"
+            onClick={deleteItem}
+          >
+            delete
           </Button>
           <Button
-            onClick={props.handleClose}
+           onClick= {editItem}
             size="small"
             variant="contained"
             sx={{ color: "#ffff", background: "#1fc3ff" }}
           >
-            save and add item
+            save edit item
           </Button>
         </DialogActions>
       </Dialog>

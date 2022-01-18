@@ -181,10 +181,10 @@ export default function SignUp() {
                     className={changeColor === "weak" ? "weak" : "normal"}
                   ></div>
                   <div
-                    className={changeColor === "medium" ? "medium" : "normal"}
+                    className={changeColor === "medium" ? "weak" : "normal"}
                   ></div>
                   <div
-                    className={changeColor === "strong" ? "strong" : "normal"}
+                    className={changeColor === "strong" ? "weak" : "normal"}
                   ></div>
                 </div>
               </div>

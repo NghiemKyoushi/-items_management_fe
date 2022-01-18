@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -95,12 +96,30 @@ export default function HomePage() {
   const [open, setOpen] = React.useState(false);
   const [checkUser, setCheckUser] = React.useState(false);
   const [nameUser, setNameUser] = React.useState("");
-  React.useEffect (() => {
+
+  const [item, setItem] = React.useState([]);
+  React.useEffect(() => {
     if (localStorage.getItem("username") !== null) {
       setCheckUser(true);
       setNameUser(localStorage.getItem("username"));
+      getAllItem(localStorage.getItem("uid"));
     }
   }, []);
+
+  const getAllItem = async (uid) => {
+    const result = await axios.get(
+      `http://localhost:3030/item/getAllItem/${uid}`
+    );
+    const data = result.data.cart;
+    const formatDate = data.map((item) => {
+      var startTime = new Date(item.expired_date);
+      console.log(startTime.toISOString().substring(0, 10));
+      item.expired_date = startTime.toISOString().substring(0, 10);
+      return item;
+    });
+    setItem(formatDate);
+    console.log(formatDate);
+  };
   const logOut = () => {
     console.log("logout");
     localStorage.removeItem("username");
@@ -160,38 +179,39 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="buttonOnNav">
-            <Link to ="/login" style={{textDecoration: "none"}}><Button
-                sx={{
-                  letterSpacing: 4,
-                  height: 38,
-                  border: "1px solid white",
-                  backgroundColor: "#1fc3ff",
-                  borderRadius: "30px",
-                  color: "white",
-                  fontWeight: "bold",
-                }}
-                variant="contained"
-              >
-                Login
-              </Button></Link>
-              
-              <Link to ="/signUp" style={{textDecoration: "none"}}>
-              <Button
-                sx={{
-                  letterSpacing: 4,
-                  height: 38,
-                  border: "1px solid white",
-                  backgroundColor: "#1fc3ff",
-                  borderRadius: "30px",
-                  color: "white",
-                  fontWeight: "bold",
-                }}
-                variant="contained"
-              >
-                Sign Up
-              </Button>
+              <Link to="/login" style={{ textDecoration: "none" }}>
+                <Button
+                  sx={{
+                    letterSpacing: 4,
+                    height: 38,
+                    border: "1px solid white",
+                    backgroundColor: "#1fc3ff",
+                    borderRadius: "30px",
+                    color: "white",
+                    fontWeight: "bold",
+                  }}
+                  variant="contained"
+                >
+                  Login
+                </Button>
               </Link>
-              
+
+              <Link to="/signUp" style={{ textDecoration: "none" }}>
+                <Button
+                  sx={{
+                    letterSpacing: 4,
+                    height: 38,
+                    border: "1px solid white",
+                    backgroundColor: "#1fc3ff",
+                    borderRadius: "30px",
+                    color: "white",
+                    fontWeight: "bold",
+                  }}
+                  variant="contained"
+                >
+                  Sign Up
+                </Button>
+              </Link>
             </div>
           )}
         </Toolbar>
@@ -239,11 +259,15 @@ export default function HomePage() {
           background: "white",
         }}
       >
-      {checkUser ? <NewItem /> : ""}
-        
+        {checkUser ? <NewItem getAllItem={getAllItem} /> : ""}
+
         <Grid container spacing={1}>
           <Grid item xs={9}>
-            {checkUser ? <ItemCard /> : "Log in to access your home"}
+            {checkUser ? (
+              <ItemCard itemData={item} getAllItem={getAllItem} />
+            ) : (
+              "Log in to access your home"
+            )}
           </Grid>
           <Grid item xs={2}>
             <DatePresent />

@@ -1,18 +1,16 @@
-import * as React from "react";
+import React, { useState } from "react";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 import DialogItem from "./DialogItem";
-export default function ItemCard() {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+export default function ItemCard({ itemData,getAllItem }) {
+  const [open, setOpen] = useState(false);
+  const [item, setItem] = useState({ item2: "", open: false });
 
   const handleClose = () => {
-    setOpen(false);
+    setItem({ item2: "", open: false });
   };
+  console.log(item.open);
   return (
     <ImageList
       cols={4}
@@ -33,21 +31,21 @@ export default function ItemCard() {
             width: "fit-content",
             borderRadius: "3px",
           }}
-          key={index}
+          key={item._id}
         >
           <img
-            src={item.img}
-            alt={item.title}
+            src={item.picture_url}
+            alt={item.name}
             loading="lazy"
             style={{ borderRadius: "3px", height: 190, width: 150 }}
-            onClick={handleClickOpen}
+            onClick={() => setItem({ item2: item, open: true })}
           />
-          <DialogItem open= {open} handleClickOpen={handleClickOpen} handleClose={handleClose} />
+
           <ImageListItemBar
-            title={item.title}
+            title={item.name}
             subtitle={
               <div>
-                <p className="usage">{item.usage}</p>
+                <p className="usage">{item.category}</p>
                 <span style={{ width: 30 }}>{item.description}</span>
               </div>
             }
@@ -55,21 +53,14 @@ export default function ItemCard() {
           />
         </ImageListItem>
       ))}
+      {
+        <DialogItem
+          open={item.open}
+          item={item.item2}
+          handleClose={handleClose}
+          getAllItem={getAllItem}
+        />
+      }
     </ImageList>
   );
 }
-
-const itemData = [
-  {
-    img: "https://res.cloudinary.com/hanoi-university/image/upload/v1642124492/ip123714_00_yod1ua.jpg",
-    title: "Sen đá",
-    usage: "Trang tri",
-    description: "do vat co the dung trang tri",
-  },
-  {
-    img: "https://res.cloudinary.com/hanoi-university/image/upload/v1642124492/ip123714_00_yod1ua.jpg",
-    title: "Sen đá",
-    usage: "Trang tri",
-    description: "do vat co the dung trang tri",
-  },
-];

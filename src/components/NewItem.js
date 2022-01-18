@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import axios, { Axios } from "axios";
+import React, {  useState } from "react";
+import axios from "axios";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -12,7 +12,7 @@ import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Divider from "@mui/material/Divider";
-import SelectApplication from "./SelectApplication";
+// import SelectApplication from "./SelectApplication";
 
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -43,18 +43,17 @@ const MenuProps = {
     },
   },
 };
-export default function NewItem() {
-  const [open, setOpen] = React.useState(false);
-  const [file, setFile] = React.useState(null);
-
-  const [name, setName] = useState("");
-  const [shortName, setShortName] = useState("");
-  const [position, setPosition] = useState("");
+export default function NewItem({getAllItem}) {
+  const [open, setOpen] = useState(false);
+  const [file, setFile] = useState('');
+  const [name, setName] = useState('');
+  const [shortName, setShortName] = useState('');
+  const [position, setPosition] = useState('');
   const [expired_date, setExpired_date] = useState(null);
-  const [category, setCategory] = useState("decorate");
-  const [picture_url, setPicture_url] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
+  const [category, setCategory] = useState('decorate');
+  const [picture_url, setPicture_url] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
 
   const onChangeName = (e) => {
     setName(e.target.value);
@@ -80,33 +79,41 @@ export default function NewItem() {
 
   const saveItem = async () => {
     try{
-      const formData = new FormData();
-      formData.append("file",picture_url[0]);
-      formData.append("upload_preset","ucq0mifj");
-     const data = await axios.post("https://api.cloudinary.com/v1_1/hanoi-university/image/upload", formData)
-      console.log(data.data);
-      
-      const body = {
-        name: name,
-        shortName: shortName,
-        position: position,
-        expired_date: expired_date,
-        category: category,
-        picture_url: data.data.secure_url,
-        description: description,
-        price: price,
-      };
-      const saveItem = await axios.post("http://localhost:3030/item/addItem", body);
-  
-      console.log("body", body);
-  
-      console.log(saveItem);
+
+      if(picture_url !== ""){
+        const formData = new FormData();
+        formData.append("file",picture_url[0]);
+        formData.append("upload_preset","ucq0mifj");
+       const data = await axios.post("https://api.cloudinary.com/v1_1/hanoi-university/image/upload", formData)
+
+        console.log(data.data);
+        const body = {
+          name: name,
+          shortName: shortName,
+          position: position,
+          expired_date: expired_date,
+          category: category,
+          picture_url: data.data.secure_url,
+          description: description,
+          price: price,
+          userID: localStorage.getItem("uid").toString()
+        };
+
+        console.log(body)
+        const saveItem = await axios.post("http://localhost:3030/item/addItem", body);
+        console.log(saveItem.data);
+        if(saveItem.data.message === "saved item"){
+          setOpen(false);
+          getAllItem(localStorage.getItem("uid"))
+        }
+        setTimeout(2000);
+        setFile("")
+        // console.log("body", body);
+        // console.log(saveItem);
+      }
     }catch(err){
-
+      console.log(err);
     }
-     
-
-    
   };
   const classes = useStyle();
 
@@ -154,6 +161,8 @@ export default function NewItem() {
                       onChange={onChangeName}
                       size="small"
                       variant="outlined"
+                      required
+                      type="text"
                     />
                   </div>
                   <div>
