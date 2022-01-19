@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -19,7 +19,7 @@ const useStyle = makeStyles(() => ({
     "& .MuiFormControl-root": {
       width: "100%",
       height: "30%",
-      margin: useTheme().spacing(0.5),
+      // margin: useTheme().spacing(0.5),
     },
     "& .MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input":
       {
@@ -40,18 +40,33 @@ const MenuProps = {
   },
 };
 export default function DialogItem(props) {
-
-  const [name, setName] = useState(props.item.name);
-  const [shortName, setShortName] = useState(props.item.shortName);
-  const [position, setPosition] = useState(props.item.position);
-  const [expired_date, setExpired_date] = useState(props.item.expired_date);
-  const [category, setCategory] = useState(props.item.category);
-  const [description, setDescription] = useState(props.item.description);
-  const [price, setPrice] = useState(props.item.price);
   const classes = useStyle();
+
+  const [name, setName] = useState('');
+  const [shortName, setShortName] = useState("");
+  const [position, setPosition] = useState('');
+  const [expired_date, setExpired_date] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [itemId, setItemId] = useState("");
+
+
+  useEffect(() => {
+    setName(props.item.name);
+    setItemId(props.item._id)
+    setShortName(props.item.shortName);
+    setPosition(props.item.position);
+    setExpired_date(props.item.expired_date);
+    setCategory(props.item.category);
+    setDescription(props.item.description);
+    setPrice(props.item.price);
+  }, [props])
 
   const onChangeName = (e) => {
     setName(e.target.value);
+    console.log(name)
+
   };
   const onChangeShortName = (e) => {
     setShortName(e.target.value);
@@ -76,6 +91,7 @@ export default function DialogItem(props) {
     console.log("edit");
     const body = {
       userID: localStorage.getItem("uid"),
+      itemId: itemId,
       name: name,
       shortName: shortName,
       position: position,
@@ -87,6 +103,10 @@ export default function DialogItem(props) {
     console.log(body);
     const editItem = await axios.post("http://localhost:3030/item/editItem", body);
     console.log(editItem.data.message);
+    if(editItem.data.message === "success"){
+      props.handleClose();
+      props.getAllItem(localStorage.getItem("uid"));
+    }
   };
 
   const deleteItem = async () => {
@@ -116,6 +136,7 @@ export default function DialogItem(props) {
           <div className="content">
             <Grid container>
               <Grid item xs={6}>
+
                 <form className={classes.root}>
                   <div>
                     <label className="labelSize">name of item</label>
@@ -123,10 +144,9 @@ export default function DialogItem(props) {
                     <TextField
                       size="small"
                       variant="outlined"
-                      value={props.item.name}
+                      value={name}
                       onChange={onChangeName}
                       type="text"
-
                     />
                   </div>
                   <div>
@@ -135,7 +155,7 @@ export default function DialogItem(props) {
                     <TextField
                       size="small"
                       variant="outlined"
-                      value={props.item.shortName}
+                      value={shortName}
                       onChange={onChangeShortName}
                     />
                   </div>
@@ -144,7 +164,7 @@ export default function DialogItem(props) {
                     <br />
                     <TextField
                       size="small"
-                      value={props.item.position}
+                      value={position}
                       variant="outlined"
                       onChange={onChangePosition}
                     />
@@ -154,7 +174,7 @@ export default function DialogItem(props) {
                     <br />
                     <TextField
                       size="small"
-                      value={props.item.expired_date}
+                      value={expired_date}
                       type="date"
                       variant="outlined"
                       onChange={onChangeExpired_date}
@@ -167,7 +187,7 @@ export default function DialogItem(props) {
                       sx={{ m: 1, width: 565 }}
                       labelId="demo-multiple-name-label"
                       id="demo-multiple-name"
-                      defaultValue={props.item.category}
+                      defaultValue={category}
                       input={<OutlinedInput size="small" />}
                       MenuProps={MenuProps}
                       onChange={onChangeCategory}
@@ -183,7 +203,7 @@ export default function DialogItem(props) {
                       onChange={onChangePrice}
                       size="small"
                       variant="outlined"
-                      value={props.item.price}
+                      value={price}
                     />
                   </div>
                   <div>
@@ -191,12 +211,13 @@ export default function DialogItem(props) {
                     <br />
                     <TextareaAutosize
                       onChange={onChangeDescription}
-                      value={props.item.description}
+                      value={description}
                       aria-label="empty textarea"
                       style={{ width: 1150, height: 100, borderRadius: "10px" }}
                     />
                   </div>
                 </form>
+
               </Grid>
               <Grid item xs={4}>
                 <div
@@ -217,7 +238,7 @@ export default function DialogItem(props) {
                           ? props.item.picture_url
                           : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ_fAACs6UF4F8AHUPEpLpzWdt1hmme9u6zQoRk7iLabIRkC6VnBLGltFfiXJo4rw16Ps&usqp=CAU"
                       }
-                      alt={props.item.name}
+                      alt={name}
                     />
                     <br />
                   </label>

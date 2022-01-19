@@ -1,5 +1,5 @@
-import * as React from "react";
-import { Link } from "react-router-dom";
+import React , {useEffect,useState}from 'react';
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -15,16 +15,13 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Avatar from "@mui/material/Avatar";
 
-import Grid from "@mui/material/Grid";
 import Setting from "../image/settings.png";
 import Home from "../image/home.png";
 import Calendar from "../image/calendar.png";
 import Avatar_img from "../image/38c6e1a50d33f6c0c1e09eced4229b94.png";
 import SearchIcon from "@mui/icons-material/Search";
 import LogoutIcon from "@mui/icons-material/Logout";
-import ItemCard from "./ItemCard";
-import DatePresent from "./DatePresent";
-import NewItem from "./NewItem";
+
 import { Button } from "@mui/material";
 const drawerWidth = 200;
 const openedMixin = (theme) => ({
@@ -91,43 +88,11 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function HomePage() {
+export default function HomePage(props) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const [checkUser, setCheckUser] = React.useState(false);
-  const [nameUser, setNameUser] = React.useState("");
-
-  const [item, setItem] = React.useState([]);
-  React.useEffect(() => {
-    if (localStorage.getItem("username") !== null) {
-      setCheckUser(true);
-      setNameUser(localStorage.getItem("username"));
-      getAllItem(localStorage.getItem("uid"));
-    }
-  }, []);
-
-  const getAllItem = async (uid) => {
-    const result = await axios.get(
-      `http://localhost:3030/item/getAllItem/${uid}`
-    );
-    const data = result.data.cart;
-    const formatDate = data.map((item) => {
-      var startTime = new Date(item.expired_date);
-      console.log(startTime.toISOString().substring(0, 10));
-      item.expired_date = startTime.toISOString().substring(0, 10);
-      return item;
-    });
-    setItem(formatDate);
-    console.log(formatDate);
-  };
-  const logOut = () => {
-    console.log("logout");
-    localStorage.removeItem("username");
-    localStorage.removeItem("uid");
-    setCheckUser(false);
-  };
   return (
-    <Box sx={{ display: "flex" }}>
+    <>
+      <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar
         sx={{ boxShadow: "none", width: "95%" }}
@@ -154,7 +119,7 @@ export default function HomePage() {
               <SearchIcon />
             </IconButton>
           </div>
-          {checkUser ? (
+          {props.checkUser ? (
             <div
               style={{
                 marginLeft: 300,
@@ -169,10 +134,10 @@ export default function HomePage() {
                 src={Avatar_img}
                 imgProps={{ height: 10, width: 10 }}
               />
-              <p style={{ marginTop: 8 }}>{nameUser}</p>
+              <p style={{ marginTop: 8 }}>{props.nameUser}</p>
               <IconButton
                 sx={{ color: "#1fc3ff", marginLeft: 2 }}
-                onClick={logOut}
+                onClick={props.logOut}
               >
                 <LogoutIcon />
               </IconButton>
@@ -227,13 +192,18 @@ export default function HomePage() {
         variant="permanent"
       >
         <DrawerHeader>
-          <IconButton size="large" color="inherit" aria-label="open drawer">
+          <IconButton
+            onClick={props.leaveHome}
+            size="large"
+            color="inherit"
+            aria-label="open drawer"
+          >
             <MenuIcon sx={{ fontSize: 40 }} />
           </IconButton>
         </DrawerHeader>
         <List>
           <ListItem button>
-            <ListItemIcon key={1}>
+            <ListItemIcon key={1} onClick={props.clickHome}>
               <img src={Home} alt="new" height="30px" width="30px" />
             </ListItemIcon>
           </ListItem>
@@ -259,21 +229,10 @@ export default function HomePage() {
           background: "white",
         }}
       >
-        {checkUser ? <NewItem getAllItem={getAllItem} /> : ""}
-
-        <Grid container spacing={1}>
-          <Grid item xs={9}>
-            {checkUser ? (
-              <ItemCard itemData={item} getAllItem={getAllItem} />
-            ) : (
-              "Log in to access your home"
-            )}
-          </Grid>
-          <Grid item xs={2}>
-            <DatePresent />
-          </Grid>
-        </Grid>
+        {props.children}
       </Box>
     </Box>
+    </>
+    
   );
 }

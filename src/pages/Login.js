@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import jwt from "jwt-decode";
 
 import Alert from "@mui/material/Alert";
-export default function Login() {
+export default function Login(props) {
   let history = useHistory();
 
   const [password, setPassword] = useState("");
@@ -36,6 +36,7 @@ export default function Login() {
       const decoded = jwt(accessLogin.data.token);
       localStorage.setItem("username", decoded.iss);
       localStorage.setItem("uid", decoded.sub);
+      props.setUser();
       history.push("/");
     }else {
       setAlert(true);

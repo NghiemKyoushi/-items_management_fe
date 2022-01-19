@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -8,11 +8,11 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 // import { FormControl, makeStyles } from '@mui/material';
 import { makeStyles } from "@mui/styles";
-import { useTheme } from "@mui/material/styles";
+// import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Divider from "@mui/material/Divider";
-// import SelectApplication from "./SelectApplication";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -23,7 +23,7 @@ const useStyle = makeStyles(() => ({
     "& .MuiFormControl-root": {
       width: "100%",
       height: "30%",
-      margin: useTheme().spacing(0.5),
+      // margin: useTheme().spacing(0.5),
     },
     "& .MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input":
       {
@@ -43,17 +43,17 @@ const MenuProps = {
     },
   },
 };
-export default function NewItem({getAllItem}) {
+export default function NewItem({ getAllItem }) {
   const [open, setOpen] = useState(false);
-  const [file, setFile] = useState('');
-  const [name, setName] = useState('');
-  const [shortName, setShortName] = useState('');
-  const [position, setPosition] = useState('');
+  const [file, setFile] = useState("");
+  const [name, setName] = useState("");
+  const [shortName, setShortName] = useState("");
+  const [position, setPosition] = useState("");
   const [expired_date, setExpired_date] = useState(null);
-  const [category, setCategory] = useState('decorate');
-  const [picture_url, setPicture_url] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
+  const [category, setCategory] = useState("decorate");
+  const [picture_url, setPicture_url] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
 
   const onChangeName = (e) => {
     setName(e.target.value);
@@ -78,13 +78,15 @@ export default function NewItem({getAllItem}) {
   };
 
   const saveItem = async () => {
-    try{
-
-      if(picture_url !== ""){
+    try {
+      if (picture_url !== "") {
         const formData = new FormData();
-        formData.append("file",picture_url[0]);
-        formData.append("upload_preset","ucq0mifj");
-       const data = await axios.post("https://api.cloudinary.com/v1_1/hanoi-university/image/upload", formData)
+        formData.append("file", picture_url[0]);
+        formData.append("upload_preset", "ucq0mifj");
+        const data = await axios.post(
+          "https://api.cloudinary.com/v1_1/hanoi-university/image/upload",
+          formData
+        );
 
         console.log(data.data);
         const body = {
@@ -96,22 +98,25 @@ export default function NewItem({getAllItem}) {
           picture_url: data.data.secure_url,
           description: description,
           price: price,
-          userID: localStorage.getItem("uid").toString()
+          userID: localStorage.getItem("uid").toString(),
         };
 
-        console.log(body)
-        const saveItem = await axios.post("http://localhost:3030/item/addItem", body);
+        console.log(body);
+        const saveItem = await axios.post(
+          "http://localhost:3030/item/addItem",
+          body
+        );
         console.log(saveItem.data);
-        if(saveItem.data.message === "saved item"){
+        if (saveItem.data.message === "saved item") {
           setOpen(false);
-          getAllItem(localStorage.getItem("uid"))
+          getAllItem(localStorage.getItem("uid"));
         }
         setTimeout(2000);
-        setFile("")
+        setFile("");
         // console.log("body", body);
         // console.log(saveItem);
       }
-    }catch(err){
+    } catch (err) {
       console.log(err);
     }
   };
@@ -145,7 +150,7 @@ export default function NewItem({getAllItem}) {
         }}
         onClick={handleClickOpen}
       >
-        Add new item
+        <AddCircleOutlineIcon /> Add new item
       </Button>
       <Dialog maxWidth="lg" fullWidth={true} open={open} onClose={handleClose}>
         <DialogTitle sx={{ color: "#1fc3ff" }}>Add new item</DialogTitle>
@@ -200,21 +205,13 @@ export default function NewItem({getAllItem}) {
                       sx={{ m: 1, width: 565 }}
                       labelId="demo-multiple-name-label"
                       id="demo-multiple-name"
-                  defaultValue={"decorate"}
+                      defaultValue={"decorate"}
                       input={<OutlinedInput size="small" />}
                       MenuProps={MenuProps}
                       onChange={onChangeCategory}
                     >
-                      <MenuItem
-                        value="decorate"
-                      >
-                        decorate
-                      </MenuItem>
-                      <MenuItem
-                        value="using"
-                      >
-                        using
-                      </MenuItem>
+                      <MenuItem value="decorate">decorate</MenuItem>
+                      <MenuItem value="using">using</MenuItem>
                     </Select>
                   </div>
                   <div>
@@ -235,6 +232,24 @@ export default function NewItem({getAllItem}) {
                       style={{ width: 1150, height: 100, borderRadius: "10px" }}
                     />
                   </div>
+                  <Divider />
+                  {/* <div>
+                    <Button
+                      onClick={handleClose}
+                      size="small"
+                      variant="outlined"
+                    >
+                      cancel
+                    </Button>
+                    <Button
+                      onClick={saveItem}
+                      size="small"
+                      variant="contained"
+                      sx={{ color: "#ffff", background: "#1fc3ff" }}
+                    >
+                      save and add item
+                    </Button>
+                  </div> */}
                 </form>
               </Grid>
               <Grid item xs={4}>
