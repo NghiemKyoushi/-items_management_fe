@@ -6,15 +6,19 @@ import HomeCard from "./HomeCard";
 import Grid from "@mui/material/Grid";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Divider, Paper } from "@material-ui/core";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
+import { Divider } from "@material-ui/core";
+import CommentForm from './CommentForm'
+import Comment from "./Comment";
 export default function FriendHome() {
   const [detail, detailHome] = useState([]);
-
+  const [comments, setComments] = useState([]);
+  const [allComments, setAllComments] = useState([])
+  // const [checkAuthen, ]
   const { id } = useParams();
   useEffect(() => {
     console.log("hahaha", id);
     getAllItemFriend(id);
+    getComments(id);
   }, [id]);
   const getAllItemFriend = async (id) => {
     console.log("jdjdjdjd");
@@ -30,19 +34,39 @@ export default function FriendHome() {
     console.log(formatDate);
     detailHome(formatDate);
   };
+  const getComments = async (id) => {
+    const result = await axios.get(`http://localhost:3030/comment/getAllComment/${id}`);
+    let arrCmt= [];
 
+    const cmt = result.data.comment.map((cmt) => {
+      if(cmt.parentId === ""){
+        arrCmt.push(cmt);
+      }
+    })
+    console.log("comment",arrCmt);
+    setComments(arrCmt);
+    setAllComments(result.data.comment)
+    // console.log("comment",result.data.comment);
+  }
   return (
     <>
       <Grid container spacing={1}>
         <Grid item xs={9}>
-          <ItemCard itemData={detail} />
+          <ItemCard  itemData={detail} />
           <Divider />
           <div>
             <h3>Comment</h3>
-            <TextareaAutosize
-              aria-label="empty textarea"
-              style={{ width: 1000, height: 100, borderRadius: "10px" }}
-            />
+           <CommentForm labelButton ="Send"/>
+            {
+              comments ? 
+              comments.map((cmt, index) => (
+                
+                  <Comment comment={cmt} userID={id} comments={allComments} key= {cmt._id}/>
+            
+              ))
+              :
+              ""
+            }
           </div>
         </Grid>
         <Grid item xs={2}>

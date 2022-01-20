@@ -34,7 +34,8 @@ export default function Login(props) {
     ); 
     if (accessLogin.data.message === "Login successfully") {
       const decoded = jwt(accessLogin.data.token);
-      localStorage.setItem("username", decoded.iss);
+      console.log(decoded);
+      localStorage.setItem("username", decoded.uname);
       localStorage.setItem("uid", decoded.sub);
       props.setUser();
       history.push("/");

@@ -178,10 +178,10 @@ export default function SignUp() {
                 <p className="standard_Password">standard password</p>
                 <div className="container">
                   <div
-                    className={changeColor === "weak" ? "weak" : "normal"}
+                    className={changeColor === "weak" || changeColor === "medium" || changeColor === "strong" ? "weak" : "normal"}
                   ></div>
                   <div
-                    className={changeColor === "medium" ? "weak" : "normal"}
+                    className={changeColor === "medium" || changeColor === "strong" ? "weak" : "normal"}
                   ></div>
                   <div
                     className={changeColor === "strong" ? "weak" : "normal"}

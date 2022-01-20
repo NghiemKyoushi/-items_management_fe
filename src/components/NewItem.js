@@ -15,7 +15,6 @@ import Divider from "@mui/material/Divider";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 const useStyle = makeStyles(() => ({
@@ -77,9 +76,10 @@ export default function NewItem({ getAllItem }) {
     setPrice(e.target.value);
   };
 
-  const saveItem = async () => {
+  const saveItem = async (e) => {
+    e.preventDefault();
     try {
-      if (picture_url !== "") {
+      if (picture_url !== "" ) {
         const formData = new FormData();
         formData.append("file", picture_url[0]);
         formData.append("upload_preset", "ucq0mifj");
@@ -111,10 +111,10 @@ export default function NewItem({ getAllItem }) {
           setOpen(false);
           getAllItem(localStorage.getItem("uid"));
         }
-        setTimeout(2000);
         setFile("");
-        // console.log("body", body);
-        // console.log(saveItem);
+       
+      }else{
+        alert("Picture need upload")
       }
     } catch (err) {
       console.log(err);
@@ -153,12 +153,13 @@ export default function NewItem({ getAllItem }) {
         <AddCircleOutlineIcon /> Add new item
       </Button>
       <Dialog maxWidth="lg" fullWidth={true} open={open} onClose={handleClose}>
+      <form className={classes.root} onSubmit={saveItem}>
+
         <DialogTitle sx={{ color: "#1fc3ff" }}>Add new item</DialogTitle>
         <DialogContent>
           <div className="content">
             <Grid container>
               <Grid item xs={6}>
-                <form className={classes.root}>
                   <div>
                     <label className="labelSize">name of item</label>
                     <br />
@@ -176,6 +177,8 @@ export default function NewItem({ getAllItem }) {
                     <TextField
                       onChange={onChangeShortName}
                       size="small"
+                      required
+
                       variant="outlined"
                     />
                   </div>
@@ -184,6 +187,8 @@ export default function NewItem({ getAllItem }) {
                     <br />
                     <TextField
                       onChange={onChangePosition}
+                      required
+
                       size="small"
                       variant="outlined"
                     />
@@ -193,6 +198,8 @@ export default function NewItem({ getAllItem }) {
                     <br />
                     <TextField
                       onChange={onChangeExpired_date}
+                      required
+
                       size="small"
                       type="date"
                       variant="outlined"
@@ -218,6 +225,8 @@ export default function NewItem({ getAllItem }) {
                     <label className="labelSize">price</label>
                     <br />
                     <TextField
+                                          required
+
                       onChange={onChangePrice}
                       size="small"
                       variant="outlined"
@@ -228,29 +237,14 @@ export default function NewItem({ getAllItem }) {
                     <br />
                     <TextareaAutosize
                       onChange={onChangeDescription}
+                      required
+
                       aria-label="empty textarea"
                       style={{ width: 1150, height: 100, borderRadius: "10px" }}
                     />
                   </div>
                   <Divider />
-                  {/* <div>
-                    <Button
-                      onClick={handleClose}
-                      size="small"
-                      variant="outlined"
-                    >
-                      cancel
-                    </Button>
-                    <Button
-                      onClick={saveItem}
-                      size="small"
-                      variant="contained"
-                      sx={{ color: "#ffff", background: "#1fc3ff" }}
-                    >
-                      save and add item
-                    </Button>
-                  </div> */}
-                </form>
+                  
               </Grid>
               <Grid item xs={4}>
                 <div
@@ -304,7 +298,8 @@ export default function NewItem({ getAllItem }) {
             cancel
           </Button>
           <Button
-            onClick={saveItem}
+          type="submit"
+            // onClick={saveItem}
             size="small"
             variant="contained"
             sx={{ color: "#ffff", background: "#1fc3ff" }}
@@ -312,6 +307,8 @@ export default function NewItem({ getAllItem }) {
             save and add item
           </Button>
         </DialogActions>
+        </form>
+
       </Dialog>
     </div>
   );

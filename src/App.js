@@ -11,7 +11,6 @@ import {
   Switch,
   Route,
   Link,
-  useParams
 } from "react-router-dom";
 import Login from "./pages/Login";
 function App() {
@@ -20,7 +19,6 @@ function App() {
   const [nameUser, setNameUser] = useState("");
   const [visitHome, setVisitHome] = useState(false);
   const [allUser, setAllUser] = useState([]);
-
   //visit friend
   const [item, setItem] = React.useState([]);
 
@@ -36,8 +34,9 @@ function App() {
   const setUser=() => {
     setCheckUser(true);
   }
+  
   const getAllUser = async () => {
-    const result = await axios.get("http://localhost:3030/users/getAllUser");
+    const result = await axios.get(`http://localhost:3030/users/getAllUser/${localStorage.getItem("uid")}`);
     setAllUser(result.data.user);
     console.log("alluser",result.data.user);
   };
@@ -55,7 +54,22 @@ function App() {
     });
     setItem(formatDate);
   };
+  const getItemByKey = async (key)=> {
+    if( key.trim() === ""){
+      getAllItem(localStorage.getItem("uid"));
 
+    }else{
+      const body ={
+        userID: localStorage.getItem("uid"),
+        keyWord: key
+      }
+      const result = await axios.post("http://localhost:3030/item/searchItem", body);
+      console.log(result.data.result);
+      setItem(result.data.result);
+    }
+
+    
+  }
  
   const logOut = () => {
     console.log("logout");
@@ -68,12 +82,13 @@ function App() {
   };
   const leaveHome =() => {
     setVisitHome(false);
+    getAllItem(localStorage.getItem("uid"));
   }
   return (
     // <Routes>
     <Switch>
       <Route path="/" exact>
-        <HomePage clickHome={clickHome} leaveHome={leaveHome} logOut={logOut} checkUser={checkUser} nameUser= {nameUser}>
+        <HomePage getItemByKey={getItemByKey} clickHome={clickHome} leaveHome={leaveHome} logOut={logOut} checkUser={checkUser} nameUser= {nameUser}>
         <Home visitHome ={visitHome} item={item} getAllItem={getAllItem} allUser={allUser} checkUser={checkUser}/>
         </HomePage>
       </Route>
@@ -85,7 +100,7 @@ function App() {
       </Route>
       <Route path="/visitHome/:id">
       <HomePage clickHome={clickHome} leaveHome={leaveHome} logOut={logOut} checkUser={checkUser} nameUser= {nameUser}>
-        <FriendHome/>
+        <FriendHome />
       </HomePage>
       </Route>
     </Switch>

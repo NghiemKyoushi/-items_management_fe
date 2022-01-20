@@ -162,3 +162,11 @@ input:focus{
 .buttonOnNav{
   margin-left: 300px;
 }
+
+.Reply{
+  margin-left: 20px;
+  width: 60%;
+}
+.cardReply{
+  margin-left: 80px;
+}

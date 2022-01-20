@@ -89,7 +89,20 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function HomePage(props) {
-  const theme = useTheme();
+  const [input, setInput] = useState("");
+
+  const handleChangeInput = (e) => {
+    setInput(e.target.value);
+  }
+  
+  const handleSubmit = () => {
+    props.getItemByKey(input)
+  }
+  const _handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      props.getItemByKey(input);
+    }
+  }
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -111,11 +124,13 @@ export default function HomePage(props) {
           </Typography>
           <div>
             <input
+              onKeyDown={_handleKeyDown}
               type="text"
               className="inputSearch"
               placeholder="Search..."
+              onChange={handleChangeInput}
             />
-            <IconButton style={{ marginLeft: -56 }}>
+            <IconButton onClick={handleSubmit}  style={{ marginLeft: -56 }}>
               <SearchIcon />
             </IconButton>
           </div>

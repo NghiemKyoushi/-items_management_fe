@@ -37,7 +37,7 @@ export default function ItemCard({ itemData,getAllItem }) {
             src={item.picture_url}
             alt={item.name}
             loading="lazy"
-            style={{ borderRadius: "3px", height: 190, width: 150 }}
+            style={{ borderRadius: "3px", height: 190, width: 150, paddingRight: 15 }}
             onClick={() => setItem({ item2: item, open: true })}
           />
 
