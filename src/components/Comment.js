@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import CardContent from "@mui/material/CardContent";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import IconButton from "@mui/material/IconButton";
 
 import {
   CardMedia,
@@ -63,6 +65,9 @@ export default function Comment(props) {
             >
               Reply
             </Button>
+            <IconButton  style={{ color: "red"}}>
+              <FavoriteBorderIcon />
+            </IconButton>
           </CardActions>
         </Box>
       </Card>
@@ -100,7 +105,7 @@ export default function Comment(props) {
           ))
         : ""}
 
-      {isReply ? <CommentForm cancelReply={cancelReply} parentId={props.comment._id} labelButton="Reply" /> : ""}
+      {isReply ? <CommentForm  userID ={props.userID ? props.userID : "" } cancelReply={cancelReply} parentId={props.comment._id} getComments={props.getComments} labelButton="Reply" /> : ""}
     </>
   );
 }

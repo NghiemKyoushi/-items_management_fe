@@ -12,11 +12,13 @@ import Comment from "./Comment";
 export default function FriendHome() {
   const [detail, detailHome] = useState([]);
   const [comments, setComments] = useState([]);
-  const [allComments, setAllComments] = useState([])
+  const [allComments, setAllComments] = useState([]);
+  const [edit, setEdit] = useState(true);
   // const [checkAuthen, ]
   const { id } = useParams();
   useEffect(() => {
     console.log("hahaha", id);
+
     getAllItemFriend(id);
     getComments(id);
   }, [id]);
@@ -36,14 +38,19 @@ export default function FriendHome() {
   };
   const getComments = async (id) => {
     const result = await axios.get(`http://localhost:3030/comment/getAllComment/${id}`);
-    let arrCmt= [];
+    let arrCmt = [];
 
-    const cmt = result.data.comment.map((cmt) => {
-      if(cmt.parentId === ""){
-        arrCmt.push(cmt);
-      }
-    })
-    console.log("comment",arrCmt);
+    // const cmt = result.data.comment.map((cmt) => {
+    //   if (cmt.parentId === "") {
+    //     arrCmt.push(cmt);
+    //   }
+    // })
+    arrCmt = result.data.comment.filter((cmt) => cmt.parentId.toString() === "").sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+
+    console.log("comment", arrCmt);
     setComments(arrCmt);
     setAllComments(result.data.comment)
     // console.log("comment",result.data.comment);
@@ -52,20 +59,18 @@ export default function FriendHome() {
     <>
       <Grid container spacing={1}>
         <Grid item xs={9}>
-          <ItemCard  itemData={detail} />
+          <ItemCard edit={edit} itemData={detail} />
           <Divider />
           <div>
             <h3>Comment</h3>
-           <CommentForm labelButton ="Send"/>
+            <CommentForm labelButton="Send" getComments={getComments} />
             {
-              comments ? 
-              comments.map((cmt, index) => (
-                
-                  <Comment comment={cmt} userID={id} comments={allComments} key= {cmt._id}/>
-            
-              ))
-              :
-              ""
+              comments ?
+                comments.map((cmt) => (
+                  <Comment comment={cmt} userID={id} comments={allComments} key={cmt._id} getComments={getComments} />
+                ))
+                :
+                ""
             }
           </div>
         </Grid>

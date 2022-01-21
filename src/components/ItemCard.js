@@ -3,7 +3,7 @@ import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 import DialogItem from "./DialogItem";
-export default function ItemCard({ itemData,getAllItem }) {
+export default function ItemCard({ itemData,getAllItem,edit }) {
   const [open, setOpen] = useState(false);
   const [item, setItem] = useState({ item2: "", open: false });
 
@@ -55,6 +55,7 @@ export default function ItemCard({ itemData,getAllItem }) {
       ))}
       {
         <DialogItem
+          edit= {edit}
           open={item.open}
           item={item.item2}
           handleClose={handleClose}

@@ -23,6 +23,7 @@ function App() {
   const [item, setItem] = React.useState([]);
 
   React.useEffect(() => {
+
     if (localStorage.getItem("username") !== null) {
       setCheckUser(true);
       setNameUser(localStorage.getItem("username"));

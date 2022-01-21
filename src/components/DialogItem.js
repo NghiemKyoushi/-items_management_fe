@@ -22,10 +22,10 @@ const useStyle = makeStyles(() => ({
       // margin: useTheme().spacing(0.5),
     },
     "& .MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input":
-      {
-        height: "30%",
-        borderRadius: "40px",
-      },
+    {
+      height: "30%",
+      borderRadius: "40px",
+    },
   },
 }));
 
@@ -87,7 +87,8 @@ export default function DialogItem(props) {
     setPrice(e.target.value);
   };
 
-  const editItem = async () => {
+  const editItem = async (e) => {
+    e.preventDefault();
     console.log("edit");
     const body = {
       userID: localStorage.getItem("uid"),
@@ -103,7 +104,7 @@ export default function DialogItem(props) {
     console.log(body);
     const editItem = await axios.post("http://localhost:3030/item/editItem", body);
     console.log(editItem.data.message);
-    if(editItem.data.message === "success"){
+    if (editItem.data.message === "success") {
       props.handleClose();
       props.getAllItem(localStorage.getItem("uid"));
     }
@@ -131,13 +132,14 @@ export default function DialogItem(props) {
         open={props.open}
         onClose={props.handleClose}
       >
-        <DialogTitle sx={{ color: "#1fc3ff" }}>Edit item</DialogTitle>
-        <DialogContent>
-          <div className="content">
-            <Grid container>
-              <Grid item xs={6}>
+        <form className={classes.root} onSubmit={editItem}>
 
-                <form className={classes.root}>
+          <DialogTitle sx={{ color: "#1fc3ff" }}>{props.edit ? "View item" :  "Edit item"}</DialogTitle>
+          <DialogContent>
+            <div className="content">
+              <Grid container>
+                <Grid item xs={6}>
+
                   <div>
                     <label className="labelSize">name of item</label>
                     <br />
@@ -147,6 +149,7 @@ export default function DialogItem(props) {
                       value={name}
                       onChange={onChangeName}
                       type="text"
+                      required
                     />
                   </div>
                   <div>
@@ -157,6 +160,7 @@ export default function DialogItem(props) {
                       variant="outlined"
                       value={shortName}
                       onChange={onChangeShortName}
+                      required
                     />
                   </div>
                   <div>
@@ -167,6 +171,7 @@ export default function DialogItem(props) {
                       value={position}
                       variant="outlined"
                       onChange={onChangePosition}
+                      required
                     />
                   </div>
                   <div>
@@ -178,6 +183,7 @@ export default function DialogItem(props) {
                       type="date"
                       variant="outlined"
                       onChange={onChangeExpired_date}
+                      required
                     />
                   </div>
                   <div>
@@ -201,6 +207,7 @@ export default function DialogItem(props) {
                     <br />
                     <TextField
                       onChange={onChangePrice}
+                      required
                       size="small"
                       variant="outlined"
                       value={price}
@@ -214,61 +221,69 @@ export default function DialogItem(props) {
                       value={description}
                       aria-label="empty textarea"
                       style={{ width: 1150, height: 100, borderRadius: "10px" }}
+                      required
                     />
                   </div>
-                </form>
 
+                </Grid>
+                <Grid item xs={4}>
+                  <div
+                    style={{
+                      marginLeft: 118,
+                      marginTop: 40,
+                      maxWidth: "100%",
+                      width: "fit-content",
+                      maxHeight: "50%",
+                    }}
+                  >
+                    <label htmlFor="btn-upload">
+                      <img
+                        width="296"
+                        height="275"
+                        src={
+                          props.item.picture_url
+                            ? props.item.picture_url
+                            : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ_fAACs6UF4F8AHUPEpLpzWdt1hmme9u6zQoRk7iLabIRkC6VnBLGltFfiXJo4rw16Ps&usqp=CAU"
+                        }
+                        alt={name}
+                      />
+                      <br />
+                    </label>
+                  </div>
+                  <div></div>
+                </Grid>
               </Grid>
-              <Grid item xs={4}>
-                <div
-                  style={{
-                    marginLeft: 118,
-                    marginTop: 40,
-                    maxWidth: "100%",
-                    width: "fit-content",
-                    maxHeight: "50%",
-                  }}
-                >
-                  <label htmlFor="btn-upload">
-                    <img
-                      width="296"
-                      height="275"
-                      src={
-                        props.item.picture_url
-                          ? props.item.picture_url
-                          : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ_fAACs6UF4F8AHUPEpLpzWdt1hmme9u6zQoRk7iLabIRkC6VnBLGltFfiXJo4rw16Ps&usqp=CAU"
-                      }
-                      alt={name}
-                    />
-                    <br />
-                  </label>
-                </div>
-                <div></div>
-              </Grid>
-            </Grid>
-          </div>
-        </DialogContent>
-        <Divider />
-        <DialogActions
-          sx={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <Button
-            size="small"
-            color="error"
-            variant="contained"
-            onClick={deleteItem}
+            </div>
+          </DialogContent>
+          <Divider />
+          {
+            props.edit ? <></>
+            :
+            <DialogActions
+            sx={{ display: "flex", justifyContent: "space-between" }}
           >
-            delete
-          </Button>
-          <Button
-           onClick= {editItem}
-            size="small"
-            variant="contained"
-            sx={{ color: "#ffff", background: "#1fc3ff" }}
-          >
-            save edit item
-          </Button>
-        </DialogActions>
+            <Button
+              size="small"
+              color="error"
+              variant="contained"
+              onClick={deleteItem}
+            >
+              delete
+            </Button>
+            <Button
+              // onClick={editItem}
+              type="submit"
+              size="small"
+              variant="contained"
+              sx={{ color: "#ffff", background: "#1fc3ff" }}
+            >
+              save edit item
+            </Button>
+          </DialogActions>
+          }
+         
+        </form>
+
       </Dialog>
     </div>
   );
