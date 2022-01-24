@@ -21,6 +21,7 @@ function App() {
   const [allUser, setAllUser] = useState([]);
   //visit friend
   const [item, setItem] = React.useState([]);
+  const [itemExpired, setItemExpired] = useState([]);
 
   React.useEffect(() => {
 
@@ -29,6 +30,7 @@ function App() {
       setNameUser(localStorage.getItem("username"));
       getAllItem(localStorage.getItem("uid"));
       getAllUser();
+      getItemExpired(localStorage.getItem("uid"));
     }
   }, [checkUser]);
 
@@ -68,10 +70,24 @@ function App() {
       console.log(result.data.result);
       setItem(result.data.result);
     }
-
-    
   }
- 
+  const getItemExpired =  async (userId) => {
+    const body = {
+      userID: userId
+    };
+    const result = await axios.post("http://localhost:3030/item/getItemExpired", body);
+    const data = result.data.message;
+    const formatDate = data.map((item) => {
+      var startTime = new Date(item.expired_date);
+      // console.log(startTime.toISOString().substring(0, 10));
+      item.expired_date = startTime.toISOString().substring(0, 10);
+      return item;
+    });
+    console.log("hdhdh",formatDate);
+    setItemExpired(formatDate);
+  
+  }
+
   const logOut = () => {
     console.log("logout");
     localStorage.removeItem("username");
@@ -90,7 +106,7 @@ function App() {
     <Switch>
       <Route path="/" exact>
         <HomePage getItemByKey={getItemByKey} clickHome={clickHome} leaveHome={leaveHome} logOut={logOut} checkUser={checkUser} nameUser= {nameUser}>
-        <Home visitHome ={visitHome} item={item} getAllItem={getAllItem} allUser={allUser} checkUser={checkUser}/>
+        <Home  visitHome ={visitHome} item={item} getAllItem={getAllItem} allUser={allUser} checkUser={checkUser} itemExpired={itemExpired}/>
         </HomePage>
       </Route>
       <Route path="/signUp" exact>

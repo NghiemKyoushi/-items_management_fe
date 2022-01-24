@@ -17,7 +17,7 @@ export default function CommentForm(props) {
   }, [props])
   const submitComment = async (e) =>  {
       e.preventDefault();
-
+      console.log("jdjdjdjd")
       if(props.userID !== ""){
         console.log("comment uid")
 
@@ -51,7 +51,20 @@ export default function CommentForm(props) {
   }
   const submitReply =  async (e) =>  {
     e.preventDefault();
-    const body ={
+
+    if(props.userID !== ""){
+      const body ={
+        userID: localStorage.getItem("uid"),
+        body: text,
+        username: localStorage.getItem("username"),
+        parentId: props.parentId
+    }
+    const sendComment = await axios.post("http://localhost:3030/comment/addComment", body);
+    props.getComments(localStorage.getItem("uid"));
+    props.cancelReply()
+    console.log("sendComment", sendComment.data.message);
+    }else{
+      const body ={
         userID: id,
         body: text,
         username: localStorage.getItem("username"),
@@ -61,8 +74,7 @@ export default function CommentForm(props) {
     props.getComments(id);
     props.cancelReply()
     console.log("sendComment", sendComment.data.message);
-
-
+    }
 }
   return (
     <>

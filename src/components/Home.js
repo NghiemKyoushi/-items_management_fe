@@ -13,11 +13,14 @@ export default function Home(props) {
   const [comments, setComments] = useState([]);
   const [allComments, setAllComments] = useState([]);
   const [userID, setUerID] = useState(localStorage.getItem("uid"));
+
+  // console.log("djdjd", props.itemExpired)
   useEffect(() => {
     getComments(localStorage.getItem("uid"));
   }, [localStorage.getItem("uid")]);
 
   const getComments = async (id) => {
+    console.log("jfjfjf");
     const result = await axios.get(`http://localhost:3030/comment/getAllComment/${id}`);
     let arrCmt = [];
     arrCmt = result.data.comment.filter((cmt) => cmt.parentId.toString() === "").sort(
@@ -52,26 +55,31 @@ export default function Home(props) {
           <Grid container spacing={1}>
             <Grid item xs={9}>
               {props.checkUser ? (
-                <ItemCard itemData={props.item} getAllItem={props.getAllItem} />
+                <>
+                  <ItemCard itemData={props.item} getAllItem={props.getAllItem} />
+
+                  <div>
+                    <h3>Comment</h3>
+                    <CommentForm labelButton="Send" getComments={getComments} />
+                    {
+                      comments ?
+                        comments.map((cmt) => (
+                          <Comment comment={cmt} userID={userID} comments={allComments} key={cmt._id} getComments={getComments} />
+                        ))
+                        :
+                        ""
+                    }
+                  </div>
+                </>
               ) : (
                 "Log in to access your home"
               )}
 
-              <div>
-                <h3>Comment</h3>
-                <CommentForm labelButton="Send" getComments={getComments} />
-                {
-                  comments ?
-                    comments.map((cmt) => (
-                      <Comment comment={cmt} userID={userID} comments={allComments} key={cmt._id} getComments={getComments} />
-                    ))
-                    :
-                    ""
-                }
-              </div>
+
+
             </Grid>
             <Grid item xs={2}>
-              <DatePresent />
+              <DatePresent itemExpired={props.itemExpired} />
             </Grid>
           </Grid>
 
